@@ -1,0 +1,108 @@
+<html>
+<head>
+    <link rel="stylesheet" href="ui/erpStyle.css?t=201612071026">
+    <link rel="stylesheet" href="ui/jquery.datetimepicker.css?t=201612071026">
+</head>
+<body style="box-sizing:border-box;">
+<div id="kDzSelect" class="kDzData" style="display: none;"></div>
+<div id="theRoot"></div>
+<script type="text/javascript">
+    var beginTime = window.appBeginTime = new Date();
+    function AsyncLoadScripts(scriptPaths, callback) {
+        var parent = document.getElementsByTagName("head").item(0) || document.documentElement;
+        var loaded = 0, len = scriptPaths.length, script;
+        for (var i = 0; i < len; i++) {
+            script = document.createElement("script");
+            script.setAttribute("type", "text/javascript");
+            script.onload = script.onreadystatechange = function () { //Attach handlers for all browsers
+                if (!/*@cc_on!@*/0 || this.readyState == "loaded" || this.readyState == "complete") {
+                    this.onerror = this.onload = this.onreadystatechange = null;
+                    loaded++;
+                    this.parentNode.removeChild(this);
+                    if (loaded == len) callback();
+                }
+            };
+            script.onerror = function () {
+                loaded++;
+                this.onerror = this.onload = this.onreadystatechange = null;
+                this.parentNode.removeChild(this);
+            };
+            script.setAttribute("src", scriptPaths[i]);//设定好路径
+            parent.appendChild(script);
+        }
+    }
+    function getCookie(name) {
+        var arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+        if (arr != null) return decodeURI(arr[2]);
+        return null;
+    }
+    AsyncLoadScripts(["/socket.io/socket.io.js", "ui/jquery.js", "ui/jquery.datetimepicker.js", "ui/json2.js", "ui/react/react.js", "ui/k.js?t=20170301"], function () {
+        var socket = io();
+        var k = window.k;
+        socket.on('nosession', function () {
+            window.location = "login.html";//没有sessionid,跳转到登录页面
+        });
+        socket.on('notLogin', function (msg) {
+            alert(msg);
+            window.location = "login.html";//没有sessionid,跳转到登录页面
+        });
+        socket.emit('cookie', {cookie: document.cookie});
+        k.webSocket = socket;
+        var _taskid = 0;//记录的是任务id
+        var _taskfunc = {};
+        var _taskSelfCtrl = {};
+        var uid = getCookie('uid');
+        var sid = getCookie('sid');
+        k.CallServerAPI = function (APIName, body, callback, timeOut, isTaskSelfCtrl) {
+            _taskid++;
+            _taskfunc[_taskid] = callback;//得到数据的回调处理函数
+            this.webSocket.emit('APIRequest', {
+                'APIName': APIName,
+                'body': body,
+                'taskid': _taskid,//基础变量每次赋值都会形成一个新的内存拷贝
+                'uid': uid,
+                'sid': sid
+            });//发送服务器请求
+            if (isTaskSelfCtrl == true) _taskSelfCtrl[_taskid] = true;
+            //超时默认5000ms
+            setTimeout((function (taskidTmp) {
+                return function () {
+                    if (k.isFunction(_taskfunc[taskidTmp]) && _taskSelfCtrl[taskidTmp] != true) {
+                        _taskfunc[taskidTmp]({timeOut: 1});//代表
+                        console.info("服务器超时,任务id 接口名:", taskidTmp, APIName);
+                        delete _taskfunc[taskidTmp];
+                    }
+                };
+            })(_taskid), (timeOut == undefined ? 5000 : timeOut));
+        };
+        k.webSocket.on('APIResponse', function (msg) {
+            var taskid = msg.taskid, theRt;
+            if (k.isFunction(_taskfunc[taskid])) {
+                try {
+                    theRt = _taskfunc[taskid](msg.body);
+                } catch (e) {
+                    console.info("APIResponse 回调函数执行报错,任务id\r\n", taskid, e.message, e.stack);
+                }
+                if (_taskSelfCtrl[taskid] == true) {
+                    if (theRt == true)
+                        delete _taskfunc[taskid];//当回调返回真,且这个回调函数也是自治函数,才删除
+                }
+                else
+                    delete _taskfunc[taskid];//如果回调不是自治函数,就直接删除,不会再下次被调用了
+            }
+        });
+        k.CallServerAPI("getAppData", {}, function (sysTree) {
+            k.syncLoadScripts(["ui/react/react-dom.js", "ui/ui_app.js"], function () {
+                AsyncLoadScripts(["ui/k.AutoEditor.js", "ui/ui_DataGrid.js", "ui/ui_DataList.js", "ui/ui_DjPage.js", "ui/ui_FormGrid.js", "ui/ui_module.js"], function () {
+                    k.AutoEditor.init();
+                    //加载智能编辑控件 及 其他控件,因为 render 执行还需要一段时间,正好用来做下载
+                    console.info('经过' + (new Date() - beginTime).toString() + 'ms,加载完成module所需模块控件.');
+                });
+                ReactDOM.render(React.createElement(k.react["App"], {sysTree: sysTree}), document.getElementById('theRoot'));
+                console.info('经过' + (new Date() - beginTime).toString() + 'ms,加载完成初始App界面.');
+            });//加载app控件
+        }, 10000);
+    });
+</script>
+</body>
+</html>

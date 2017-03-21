@@ -1,0 +1,447 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>KPI考核报表</title>
+    <meta name="viewport" content="initial-scale = 1, user-scalable = no">
+    <script src="kui/jquery.js"></script>
+    <script src="Chart.js"></script>
+    <style>
+        .thebody {
+            position: absolute;
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            font-family: 黑体;
+            background-color: rgba(224, 224, 224, 1.00);
+        }
+
+        .div1 {
+            position: relative;
+            margin-left: 10px;
+            width: 49%;
+            height: 49%;
+            background-color: white;
+            float: left;
+        }
+
+        .div2 {
+            position: relative;
+            margin-right: 10px;
+            width: 49%;
+            height: 49%;
+            background-color: white;
+            float: right;
+        }
+
+        .div3 {
+            position: relative;
+            margin-top: 10px;
+            margin-left: 10px;
+            width: 49%;
+            height: 49%;
+            background-color: white;
+            float: left;
+        }
+
+        .div4 {
+            position: relative;
+            margin-top: 10px;
+            margin-right: 10px;
+            width: 49%;
+            height: 49%;
+            background-color: white;
+            float: right;
+        }
+
+        .btfont {
+            text-align: center;
+            font-size: 36px;
+            background-color: rgba(69, 189, 121, 1.00);
+            color: white;
+            height: 10%;
+        }
+
+        .thediv1 {
+            position: relative;
+            height: 25%;
+            width: 100%;
+            font-size: 24px;
+        }
+
+        .thediv1z {
+            position: relative;
+            height: 100%;
+            width: 50%;
+            float: left;
+
+        }
+
+        .thediv1y {
+            position: relative;
+            height: 100%;
+            width: 50%;
+            float: right;
+
+        }
+
+        .thediv1yz {
+            position: relative;
+            height: 100%;
+            width: 50%;
+            float: left;
+
+        }
+
+        .thediv1yy {
+            position: relative;
+            height: 100%;
+            width: 50%;
+            float: right;
+
+        }
+
+        .thediv2 {
+            position: relative;
+            height: 65%;
+            width: 100%;
+
+        }
+
+        .thediv2z {
+            position: relative;
+            height: 100%;
+            width: 50%;
+
+            float: left;
+        }
+
+        .thediv2y {
+            position: relative;
+            height: 100%;
+            width: 50%;
+
+            float: right;
+        }
+
+        .thefont {
+            margin-top: 30px;
+            margin-left: 20px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("span").css({
+                "color": "red"
+            });
+        });
+    </script>
+</head>
+<body class="thebody">
+<div class="div1">
+    <div class="btfont">销售收入</div>
+    <div class="thediv1">
+        <div class="thediv1z">
+            <div class="thefont">
+                <div>年度目标:<span id="xsndmb">2000</span>万</div>
+                <div>月度目标:<span id="xsydmb">2000</span>万</div>
+                <div>当日目标:<span id="xsdrmb">2000</span>万</div>
+            </div>
+        </div>
+        <div class="thediv1y">
+            <div class="thediv1yz">
+                <div class="thefont">
+                    <div>年度实绩:<span id="xsndsj">4800</span>万</div>
+                    <div>月度实绩:<span id="xsydsj">240</span>万</div>
+                    <div>当日实绩:<span id="xsdrsj">18</span>万</div>
+                </div>
+            </div>
+            <div class="thediv1yy">
+                <div class="thefont">
+                    <div>达成率:<span id="xsdcl1">69</span>%</div>
+                    <div>达成率:<span id="xsdcl2">60</span>%</div>
+                    <div>达成率:<span id="xsdcl3">88</span>%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="thediv2">
+        <div class="thediv2z">
+            <canvas id="canvas1" height="236" width="400" style="position: relative; top: 50px;"></canvas>
+        </div>
+        <div class="thediv2y">
+            <canvas id="canvas2" height="236" width="400" style="position: relative; top: 50px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="div2">
+    <div class="btfont">毛利率</div>
+    <div class="thediv1">
+        <div class="thediv1z">
+            <div class="thefont">
+                <div>年度目标:<span id="mllndmb">2000</span>万</div>
+                <div>月度目标:<span id="mllydmb">2000</span>万</div>
+                <div>当日目标:<span id="mlldrmb">2000</span>万</div>
+            </div>
+        </div>
+        <div class="thediv1y">
+            <div class="thediv1yz">
+                <div class="thefont">
+                    <div>年度实绩:<span id="mllndsj">4800</span>万</div>
+                    <div>月度实绩:<span id="mllydsj">240</span>万</div>
+                    <div>当日实绩:<span id="mlldrsj">18</span>万</div>
+                </div>
+            </div>
+            <div class="thediv1yy">
+                <div class="thefont">
+                    <div>达成率:<span id="mlldcl1">69</span>%</div>
+                    <div>达成率:<span id="mlldcl2">60</span>%</div>
+                    <div>达成率:<span id="mlldcl3">88</span>%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="thediv2">
+        <div class="thediv2z">
+            <canvas id="canvas3" height="236" width="400" style="position: relative; top: 50px;"></canvas>
+        </div>
+        <div class="thediv2y">
+            <canvas id="canvas4" height="236" width="400" style="position: relative; top: 50px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="div3">
+    <div class="btfont">人工成本</div>
+    <div class="thediv1">
+        <div class="thediv1z">
+            <div class="thefont">
+                <div>年度目标:<span id="rgndmb">2000</span>万</div>
+                <div>月度目标:<span id="rgydmb">2000</span>万</div>
+                <div>当日目标:<span id="rgdrmb">2000</span>万</div>
+            </div>
+        </div>
+        <div class="thediv1y">
+            <div class="thediv1yz">
+                <div class="thefont">
+                    <div>年度实绩:<span id="rgndsj">4800</span>万</div>
+                    <div>月度实绩:<span id="rgydsj">240</span>万</div>
+                    <div>当日实绩:<span id="rgdrsj">18</span>万</div>
+                </div>
+            </div>
+            <div class="thediv1yy">
+                <div class="thefont">
+                    <div>达成率:<span id="rgdcl1">69</span>%</div>
+                    <div>达成率:<span id="rgdcl2">60</span>%</div>
+                    <div>达成率:<span id="rgdcl3">88</span>%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="thediv2">
+        <div class="thediv2z">
+            <canvas id="canvas5" height="236" width="400" style="position: relative; top: 50px;"></canvas>
+        </div>
+        <div class="thediv2y">
+            <canvas id="canvas6" height="236" width="400" style="position: relative; top: 50px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="div4">
+    <div class="btfont">客诉率统计</div>
+    <div class="thediv1">
+        <div class="thediv1z">
+            <div class="thefont">
+                <div>年度目标:<span id="ksndmb">2000</span>万</div>
+                <div>月度目标:<span id="ksydmb">2000</span>万</div>
+                <div>当日目标:<span id="ksdrmb">2000</span>万</div>
+            </div>
+        </div>
+        <div class="thediv1y">
+            <div class="thediv1yz">
+                <div class="thefont">
+                    <div>年度实绩:<span id="ksndsj">4800</span>万</div>
+                    <div>月度实绩:<span id="ksydsj">240</span>万</div>
+                    <div>当日实绩:<span id="ksdrsj">18</span>万</div>
+                </div>
+            </div>
+            <div class="thediv1yy">
+                <div class="thefont">
+                    <div>达成率:<span id="ksdcl1">69</span>%</div>
+                    <div>达成率:<span id="ksdcl2">60</span>%</div>
+                    <div>达成率:<span id="ksdcl3">88</span>%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="thediv2">
+        <div class="thediv2z">
+            <canvas id="canvas7" height="236" width="400" style="position: relative; top: 50px;"></canvas>
+        </div>
+        <div class="thediv2y">
+            <canvas id="canvas8" height="236" width="400" style="position: relative; top: 50px;"></canvas>
+        </div>
+    </div>
+</div>
+<script>
+    var barChartData = {
+        labels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        datasets: [
+            {
+                fillColor: "rgba(255,0,0,0.1)",
+                strokeColor: "rgba(255,0,0,0.2)",
+                data: [28, 48, 40, 19, 96, 27, 100, 28, 48, 40, 19, 96, 27, 10]
+            },
+            {
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,0.3)",
+                data: [65, 59, 90, 81, 56, 55, 40, 65, 59, 90, 81, 56, 55, 28]
+            }
+        ]
+    };
+    var myLine = new Chart(document.getElementById("canvas1").getContext("2d")).Bar(barChartData);
+    var lineChartData = {
+        labels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        datasets: [
+            {
+                fillColor: "rgba(255,0,0,0.1)",
+                strokeColor: "rgba(255,0,0,0.4)",
+                pointColor: "rgba(255,0,0,0.5)",
+                pointStrokeColor: "#fff",
+                data: [28, 48, 40, 19, 96, 27, 100, 28, 48, 40, 19, 96, 27, 10]
+            },
+            {
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                data: [65, 59, 90, 81, 56, 55, 40, 65, 59, 90, 81, 56, 55, 28]
+            }
+        ]
+    };
+    var myLine = new Chart(document.getElementById("canvas2").getContext("2d")).Line(lineChartData);
+    var lineChartData = {
+        labels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        datasets: [
+            {
+                fillColor: "rgba(255,0,0,0.1)",
+                strokeColor: "rgba(255,0,0,0.4)",
+                pointColor: "rgba(255,0,0,0.5)",
+                pointStrokeColor: "#fff",
+                data: [28, 48, 40, 19, 96, 27, 100, 28, 48, 40, 19, 96, 27, 10]
+            },
+            {
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                data: [65, 59, 90, 81, 56, 55, 40, 65, 59, 90, 81, 56, 55, 28]
+            }
+        ]
+    };
+    var myLine = new Chart(document.getElementById("canvas3").getContext("2d")).Line(lineChartData);
+    var lineChartData = {
+        labels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        datasets: [
+            {
+                fillColor: "rgba(255,0,0,0.1)",
+                strokeColor: "rgba(255,0,0,0.4)",
+                pointColor: "rgba(255,0,0,0.5)",
+                pointStrokeColor: "#fff",
+                data: [28, 48, 40, 19, 96, 27, 100, 28, 48, 40, 19, 96, 27, 10]
+            },
+            {
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                data: [65, 59, 90, 81, 56, 55, 40, 65, 59, 90, 81, 56, 55, 28]
+            }
+        ]
+    };
+    var myLine = new Chart(document.getElementById("canvas4").getContext("2d")).Line(lineChartData);
+    var lineChartData = {
+        labels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        datasets: [
+            {
+                fillColor: "rgba(255,0,0,0.1)",
+                strokeColor: "rgba(255,0,0,0.4)",
+                pointColor: "rgba(255,0,0,0.5)",
+                pointStrokeColor: "#fff",
+                data: [28, 48, 40, 19, 96, 27, 100, 28, 48, 40, 19, 96, 27, 10]
+            },
+            {
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                data: [65, 59, 90, 81, 56, 55, 40, 65, 59, 90, 81, 56, 55, 28]
+            }
+        ]
+    };
+    var myLine = new Chart(document.getElementById("canvas5").getContext("2d")).Line(lineChartData);
+    var lineChartData = {
+        labels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        datasets: [
+            {
+                fillColor: "rgba(255,0,0,0.1)",
+                strokeColor: "rgba(255,0,0,0.4)",
+                pointColor: "rgba(255,0,0,0.5)",
+                pointStrokeColor: "#fff",
+                data: [28, 48, 40, 19, 96, 27, 100, 28, 48, 40, 19, 96, 27, 10]
+            },
+            {
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                data: [65, 59, 90, 81, 56, 55, 40, 65, 59, 90, 81, 56, 55, 28]
+            }
+        ]
+    };
+    var myLine = new Chart(document.getElementById("canvas6").getContext("2d")).Line(lineChartData);
+    var lineChartData = {
+        labels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        datasets: [
+            {
+                fillColor: "rgba(255,0,0,0.1)",
+                strokeColor: "rgba(255,0,0,0.4)",
+                pointColor: "rgba(255,0,0,0.5)",
+                pointStrokeColor: "#fff",
+                data: [28, 48, 40, 19, 96, 27, 100, 28, 48, 40, 19, 96, 27, 10]
+            },
+            {
+                fillColor: "rgba(151,187,205,0.1)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                data: [65, 59, 90, 81, 56, 55, 40, 65, 59, 90, 81, 56, 55, 28]
+            }
+        ]
+    };
+    var myLine = new Chart(document.getElementById("canvas7").getContext("2d")).Line(lineChartData);
+    var lineChartData = {
+        labels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        datasets: [
+            {
+                fillColor: "rgba(255,0,0,0.1)",
+                strokeColor: "rgba(255,0,0,0.4)",
+                pointColor: "rgba(255,0,0,0.5)",
+                pointStrokeColor: "#fff",
+                data: [28, 48, 40, 19, 96, 27, 100, 28, 48, 40, 19, 96, 27, 10]
+            },
+            {
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                data: [65, 59, 90, 81, 56, 55, 40, 65, 59, 90, 81, 56, 55, 28]
+            }
+        ]
+    };
+    var myLine = new Chart(document.getElementById("canvas8").getContext("2d")).Line(lineChartData);
+</script>
+</body>
+</html>
